@@ -54,7 +54,8 @@ export default function ComponentsPage() {
     try {
       const saved = localStorage.getItem('tokenlab-design');
       if (saved) {
-        setDesign(JSON.parse(saved));
+        const parsed = JSON.parse(saved) as Partial<DesignConfig>;
+        setDesign({ ...DEFAULT_DESIGN, ...parsed });
         return;
       }
       const ai = sessionStorage.getItem('tokenlab-ai-config');

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import {
   Printer,
   Download,
@@ -117,28 +117,30 @@ const NAV_ITEMS = [
 
 export default function SystemPage() {
   const [design, setDesign] = useState<DesignConfig>(DEFAULT_DESIGN);
-  const [tokens, setTokens] = useState<GeneratedTokens | null>(null);
   const [active, setActive] = useState('colors');
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     try {
       const saved = localStorage.getItem('tokenlab-design');
-      if (saved) setDesign(JSON.parse(saved));
+      if (saved) {
+        const parsed = JSON.parse(saved) as Partial<DesignConfig>;
+        setDesign({ ...DEFAULT_DESIGN, ...parsed });
+      }
     } catch {}
   }, []);
 
-  useEffect(() => {
+  const tokens = useMemo((): GeneratedTokens => {
     const config: TokenConfig = {
       primaryColor: design.primaryColor,
-      secondaryColor: design.secondaryColor,
+      secondaryColor: design.secondaryColor ?? DEFAULT_DESIGN.secondaryColor,
       fontFamily: design.fontFamily,
       scaleRatio: 1.25,
       baseFontSize: 16,
       baseSpacing: 4,
       radiusStyle: 'rounded',
     };
-    setTokens(generateAllTokens(config));
+    return generateAllTokens(config);
   }, [design]);
 
   useEffect(() => {
@@ -159,7 +161,6 @@ export default function SystemPage() {
   }, []);
 
   const handleExportHTML = () => {
-    if (!tokens) return;
     const html = generateSystemHTML(tokens, design);
     const blob = new Blob([html], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
@@ -169,8 +170,6 @@ export default function SystemPage() {
     a.click();
     URL.revokeObjectURL(url);
   };
-
-  if (!tokens) return null;
 
   const pc = design.primaryColor;
   const sc = design.secondaryColor;
