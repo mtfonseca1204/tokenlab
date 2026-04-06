@@ -5,6 +5,7 @@ import type {
   ComponentSize,
   DesignConfig,
 } from '@/lib/component-types';
+import { GradientControls } from './ButtonBuilder';
 
 function Label({ children }: { children: React.ReactNode }) {
   return (
@@ -116,13 +117,20 @@ export function ContainerOptions({
         <Label>Background</Label>
         <ToggleGroup
           options={
-            ['transparent', 'white', 'light', 'dark'] as BG[]
+            ['transparent', 'white', 'light', 'dark', 'gradient'] as BG[]
           }
           value={config.background}
           onChange={(v) => set('background', v)}
-          cols={2}
+          cols={3}
         />
       </div>
+
+      {config.background === 'gradient' && (
+        <GradientControls
+          value={config.gradientBg}
+          onChange={(g) => set('gradientBg', { ...g, enabled: true })}
+        />
+      )}
 
       <Toggle
         label="Border"
@@ -157,9 +165,10 @@ export function ContainerPreview({
   config: ContainerConfig;
   design: DesignConfig;
 }) {
-  const textColor = config.background === 'dark' ? '#f4f4f5' : '#18181b';
-  const subColor = config.background === 'dark' ? '#a1a1aa' : '#71717a';
-  const barColor = config.background === 'dark' ? '#3f3f46' : '#e4e4e7';
+  const isDark = config.background === 'dark' || config.background === 'gradient';
+  const textColor = isDark ? '#f4f4f5' : '#18181b';
+  const subColor = isDark ? '#a1a1aa' : '#71717a';
+  const barColor = isDark ? 'rgba(255,255,255,0.15)' : '#e4e4e7';
 
   return (
     <div
@@ -176,7 +185,9 @@ export function ContainerPreview({
           maxWidth: Math.min(MAXW[config.maxWidth], 580),
           margin: '0 auto',
           padding: PAD[config.padding],
-          backgroundColor: BG_MAP[config.background],
+          ...(config.background === 'gradient'
+            ? { background: `linear-gradient(${config.gradientBg.direction}, ${config.gradientBg.from}, ${config.gradientBg.to})` }
+            : { backgroundColor: BG_MAP[config.background] }),
           border: config.hasBorder ? '1px solid #d4d4d8' : 'none',
           borderRadius: 8,
           transition: 'all 0.2s',

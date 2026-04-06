@@ -6,7 +6,10 @@ import type {
   RadiusPreset,
   ShadowLevel,
   DesignConfig,
+  GradientConfig,
 } from '@/lib/component-types';
+import { GRADIENT_DIRECTIONS } from '@/lib/component-types';
+import { GradientControls } from './ButtonBuilder';
 import { hexToRGB } from '@/lib/colors';
 
 function contrastColor(hex: string): string {
@@ -124,6 +127,47 @@ export function CardOptions({
         onChange={(v) => set('hasImage', v)}
       />
 
+      {config.hasImage && (
+        <div>
+          <Label>Image URL</Label>
+          <input
+            value={config.imageUrl}
+            onChange={(e) => set('imageUrl', e.target.value)}
+            placeholder="https://..."
+            className="w-full px-3 py-2 bg-surface-secondary border border-line rounded-lg text-sm text-content focus:outline-none focus:ring-1 focus:ring-content-faint placeholder:text-content-faint"
+          />
+        </div>
+      )}
+
+      <div className="pt-2 border-t border-line">
+        <div className="flex items-center justify-between mb-2">
+          <Label>Gradient Cover</Label>
+          <button
+            onClick={() =>
+              set('gradientBg', {
+                ...config.gradientBg,
+                enabled: !config.gradientBg.enabled,
+              })
+            }
+            className={`relative w-9 h-5 rounded-full transition-colors ${
+              config.gradientBg.enabled ? 'bg-content' : 'bg-surface-secondary'
+            }`}
+          >
+            <span
+              className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-surface shadow transition-transform ${
+                config.gradientBg.enabled ? 'translate-x-4' : ''
+              }`}
+            />
+          </button>
+        </div>
+        {config.gradientBg.enabled && (
+          <GradientControls
+            value={config.gradientBg}
+            onChange={(g) => set('gradientBg', g)}
+          />
+        )}
+      </div>
+
       <Toggle
         label="Actions"
         checked={config.hasActions}
@@ -218,14 +262,30 @@ export function CardPreview({
         width: '100%',
       }}
     >
-      {config.hasImage && (
+      {config.gradientBg.enabled ? (
+        <div
+          style={{
+            height: 180,
+            background: `linear-gradient(${config.gradientBg.direction}, ${config.gradientBg.from}, ${config.gradientBg.to})`,
+          }}
+        />
+      ) : config.hasImage && config.imageUrl ? (
+        <img
+          src={config.imageUrl}
+          alt=""
+          style={{ width: '100%', height: 180, objectFit: 'cover' }}
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.display = 'none';
+          }}
+        />
+      ) : config.hasImage ? (
         <div
           style={{
             height: 180,
             background: `linear-gradient(135deg, ${design.primaryColor}18, ${design.primaryColor}40)`,
           }}
         />
-      )}
+      ) : null}
       <div style={{ padding: PAD[config.padding] }}>
         <h3
           style={{

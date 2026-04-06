@@ -1,6 +1,14 @@
 export interface DesignConfig {
   primaryColor: string;
+  secondaryColor: string;
   fontFamily: string;
+}
+
+export interface GradientConfig {
+  enabled: boolean;
+  from: string;
+  to: string;
+  direction: 'to right' | 'to bottom right' | 'to bottom' | 'to bottom left';
 }
 
 export type ButtonVariant =
@@ -21,18 +29,21 @@ export interface ButtonConfig {
   icon: string | null;
   iconPosition: 'left' | 'right';
   fullWidth: boolean;
+  gradient: GradientConfig;
 }
 
 export interface CardConfig {
   title: string;
   description: string;
   hasImage: boolean;
+  imageUrl: string;
   hasActions: boolean;
   actionLabel: string;
   shadow: ShadowLevel;
   padding: ComponentSize;
   radius: RadiusPreset;
   hasBorder: boolean;
+  gradientBg: GradientConfig;
 }
 
 export interface ModalConfig {
@@ -47,14 +58,30 @@ export interface ModalConfig {
 export interface ContainerConfig {
   maxWidth: 'sm' | 'md' | 'lg' | 'xl' | 'full';
   padding: ComponentSize;
-  background: 'transparent' | 'white' | 'light' | 'dark';
+  background: 'transparent' | 'white' | 'light' | 'dark' | 'gradient';
   hasBorder: boolean;
+  gradientBg: GradientConfig;
 }
 
 export type ComponentType = 'button' | 'card' | 'modal' | 'container';
 
+export const GRADIENT_DIRECTIONS = [
+  'to right',
+  'to bottom right',
+  'to bottom',
+  'to bottom left',
+] as const;
+
+export const DEFAULT_GRADIENT: GradientConfig = {
+  enabled: false,
+  from: '#6366f1',
+  to: '#a855f7',
+  direction: 'to right',
+};
+
 export const DEFAULT_DESIGN: DesignConfig = {
   primaryColor: '#6366f1',
+  secondaryColor: '#a855f7',
   fontFamily: 'Inter',
 };
 
@@ -66,6 +93,7 @@ export const DEFAULT_BUTTON: ButtonConfig = {
   icon: 'ArrowRight',
   iconPosition: 'right',
   fullWidth: false,
+  gradient: { ...DEFAULT_GRADIENT },
 };
 
 export const DEFAULT_CARD: CardConfig = {
@@ -73,12 +101,14 @@ export const DEFAULT_CARD: CardConfig = {
   description:
     'A brief description that provides context about this card content.',
   hasImage: true,
+  imageUrl: '',
   hasActions: true,
   actionLabel: 'Learn More',
   shadow: 'md',
   padding: 'md',
   radius: 'lg',
   hasBorder: true,
+  gradientBg: { ...DEFAULT_GRADIENT },
 };
 
 export const DEFAULT_MODAL: ModalConfig = {
@@ -95,4 +125,5 @@ export const DEFAULT_CONTAINER: ContainerConfig = {
   padding: 'md',
   background: 'white',
   hasBorder: false,
+  gradientBg: { ...DEFAULT_GRADIENT },
 };

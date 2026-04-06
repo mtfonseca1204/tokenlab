@@ -107,21 +107,33 @@ export default function ComponentsPage() {
           <h2 className="text-[11px] font-semibold text-content-muted uppercase tracking-wider">
             Design
           </h2>
-          <div className="flex items-center gap-3">
-            <label className="flex items-center gap-2 flex-1 min-w-0">
-              <span className="text-xs text-content-secondary">Color</span>
-              <div className="relative">
-                <input
-                  type="color"
-                  value={design.primaryColor}
-                  onChange={(e) =>
-                    setDesign({ ...design, primaryColor: e.target.value })
-                  }
-                  className="w-7 h-7 rounded-md border border-line cursor-pointer"
-                />
-              </div>
-              <span className="text-[11px] text-content-faint font-mono">
+          <div className="space-y-2">
+            <label className="flex items-center gap-2">
+              <span className="text-xs text-content-secondary w-16">Primary</span>
+              <input
+                type="color"
+                value={design.primaryColor}
+                onChange={(e) =>
+                  setDesign({ ...design, primaryColor: e.target.value })
+                }
+                className="w-7 h-7 rounded-md border border-line cursor-pointer"
+              />
+              <span className="text-[10px] text-content-faint font-mono">
                 {design.primaryColor}
+              </span>
+            </label>
+            <label className="flex items-center gap-2">
+              <span className="text-xs text-content-secondary w-16">Secondary</span>
+              <input
+                type="color"
+                value={design.secondaryColor}
+                onChange={(e) =>
+                  setDesign({ ...design, secondaryColor: e.target.value })
+                }
+                className="w-7 h-7 rounded-md border border-line cursor-pointer"
+              />
+              <span className="text-[10px] text-content-faint font-mono">
+                {design.secondaryColor}
               </span>
             </label>
           </div>

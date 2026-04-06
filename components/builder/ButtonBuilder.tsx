@@ -27,7 +27,9 @@ import type {
   ComponentSize,
   RadiusPreset,
   DesignConfig,
+  GradientConfig,
 } from '@/lib/component-types';
+import { GRADIENT_DIRECTIONS } from '@/lib/component-types';
 import { hexToRGB } from '@/lib/colors';
 
 export const ICON_MAP: Record<string, LucideIcon> = {
@@ -218,9 +220,104 @@ export function ButtonOptions({
           />
         </button>
       </div>
+
+      <div className="pt-2 border-t border-line">
+        <div className="flex items-center justify-between mb-2">
+          <Label>Gradient</Label>
+          <button
+            onClick={() =>
+              set('gradient', {
+                ...config.gradient,
+                enabled: !config.gradient.enabled,
+              })
+            }
+            className={`relative w-9 h-5 rounded-full transition-colors ${
+              config.gradient.enabled ? 'bg-content' : 'bg-surface-secondary'
+            }`}
+          >
+            <span
+              className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-surface shadow transition-transform ${
+                config.gradient.enabled ? 'translate-x-4' : ''
+              }`}
+            />
+          </button>
+        </div>
+        {config.gradient.enabled && (
+          <GradientControls
+            value={config.gradient}
+            onChange={(g) => set('gradient', g)}
+          />
+        )}
+      </div>
     </div>
   );
 }
+
+/* ─── GRADIENT CONTROLS ─── */
+
+function GradientControls({
+  value,
+  onChange,
+}: {
+  value: GradientConfig;
+  onChange: (g: GradientConfig) => void;
+}) {
+  return (
+    <div className="space-y-2.5 mt-2">
+      <div className="flex items-center gap-2">
+        <span className="text-[10px] text-content-faint w-8">From</span>
+        <input
+          type="color"
+          value={value.from}
+          onChange={(e) => onChange({ ...value, from: e.target.value })}
+          className="w-6 h-6 rounded border border-line cursor-pointer"
+        />
+        <span className="text-[10px] text-content-faint font-mono">
+          {value.from}
+        </span>
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="text-[10px] text-content-faint w-8">To</span>
+        <input
+          type="color"
+          value={value.to}
+          onChange={(e) => onChange({ ...value, to: e.target.value })}
+          className="w-6 h-6 rounded border border-line cursor-pointer"
+        />
+        <span className="text-[10px] text-content-faint font-mono">
+          {value.to}
+        </span>
+      </div>
+      <div>
+        <div
+          className="grid grid-cols-4 gap-1 bg-surface-secondary/60 rounded-lg p-1"
+        >
+          {GRADIENT_DIRECTIONS.map((dir) => (
+            <button
+              key={dir}
+              onClick={() => onChange({ ...value, direction: dir })}
+              className={`px-1 py-1 text-[9px] font-medium rounded-md transition-all ${
+                value.direction === dir
+                  ? 'bg-surface text-content shadow-sm'
+                  : 'text-content-muted hover:text-content'
+              }`}
+            >
+              {dir === 'to right' ? '→' : dir === 'to bottom right' ? '↘' : dir === 'to bottom' ? '↓' : '↙'}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div
+        className="h-6 rounded-md"
+        style={{
+          background: `linear-gradient(${value.direction}, ${value.from}, ${value.to})`,
+        }}
+      />
+    </div>
+  );
+}
+
+export { GradientControls };
 
 /* ─── PREVIEW ─── */
 
@@ -261,28 +358,33 @@ export function ButtonPreview({
     ...PAD[config.size],
   };
 
-  switch (config.variant) {
-    case 'primary':
-      base.backgroundColor = design.primaryColor;
-      base.color = contrastColor(design.primaryColor);
-      break;
-    case 'secondary':
-      base.backgroundColor = `${design.primaryColor}1a`;
-      base.color = design.primaryColor;
-      break;
-    case 'outline':
-      base.backgroundColor = 'transparent';
-      base.color = design.primaryColor;
-      base.border = `1px solid ${design.primaryColor}4d`;
-      break;
-    case 'ghost':
-      base.backgroundColor = 'transparent';
-      base.color = design.primaryColor;
-      break;
-    case 'destructive':
-      base.backgroundColor = '#ef4444';
-      base.color = '#ffffff';
-      break;
+  if (config.gradient.enabled) {
+    base.background = `linear-gradient(${config.gradient.direction}, ${config.gradient.from}, ${config.gradient.to})`;
+    base.color = '#ffffff';
+  } else {
+    switch (config.variant) {
+      case 'primary':
+        base.backgroundColor = design.primaryColor;
+        base.color = contrastColor(design.primaryColor);
+        break;
+      case 'secondary':
+        base.backgroundColor = `${design.primaryColor}1a`;
+        base.color = design.primaryColor;
+        break;
+      case 'outline':
+        base.backgroundColor = 'transparent';
+        base.color = design.primaryColor;
+        base.border = `1px solid ${design.primaryColor}4d`;
+        break;
+      case 'ghost':
+        base.backgroundColor = 'transparent';
+        base.color = design.primaryColor;
+        break;
+      case 'destructive':
+        base.backgroundColor = '#ef4444';
+        base.color = '#ffffff';
+        break;
+    }
   }
 
   if (config.fullWidth) {
