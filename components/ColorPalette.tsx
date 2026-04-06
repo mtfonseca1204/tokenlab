@@ -28,7 +28,7 @@ export function ColorPalette({ name, scale, compact }: ColorPaletteProps) {
   return (
     <div>
       <div className="flex items-center gap-2 mb-2">
-        <h3 className="text-sm font-medium text-zinc-300 capitalize">
+        <h3 className="text-sm font-medium text-content-secondary capitalize">
           {name}
         </h3>
         <div
@@ -39,7 +39,7 @@ export function ColorPalette({ name, scale, compact }: ColorPaletteProps) {
           }}
         />
       </div>
-      <div className={`grid gap-1.5 ${compact ? 'grid-cols-11' : 'grid-cols-11'}`}>
+      <div className="grid grid-cols-11 gap-1.5">
         {SHADES.map((shade) => {
           const hex = scale[shade];
           const useWhite = shouldUseWhiteText(hex);
@@ -55,7 +55,7 @@ export function ColorPalette({ name, scale, compact }: ColorPaletteProps) {
               title={`${name} ${shade}: ${hex}\nWhite: ${contrastW}:1 · Black: ${contrastB}:1`}
             >
               <div
-                className={`w-full rounded-lg flex items-center justify-center transition-all duration-200 group-hover:scale-105 group-focus-visible:ring-2 group-focus-visible:ring-zinc-400 ${
+                className={`w-full rounded-lg flex items-center justify-center transition-all duration-200 group-hover:scale-105 group-focus-visible:ring-2 group-focus-visible:ring-content-faint ${
                   compact ? 'aspect-[4/3]' : 'aspect-square'
                 }`}
                 style={{
@@ -78,11 +78,11 @@ export function ColorPalette({ name, scale, compact }: ColorPaletteProps) {
                   />
                 )}
               </div>
-              <span className="text-[10px] font-medium text-zinc-500 tabular-nums">
+              <span className="text-[10px] font-medium text-content-muted tabular-nums">
                 {shade}
               </span>
               {!compact && (
-                <span className="text-[9px] font-mono text-zinc-600 group-hover:text-zinc-400 transition-colors">
+                <span className="text-[9px] font-mono text-content-faint group-hover:text-content-muted transition-colors">
                   {hex.toUpperCase()}
                 </span>
               )}

@@ -46,12 +46,12 @@ export function ExportPanel({ tokens, fontFamily, onClose }: ExportPanelProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
       <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative bg-zinc-900 border border-zinc-700/50 rounded-2xl w-full max-w-4xl max-h-[85vh] flex flex-col overflow-hidden shadow-2xl animate-modal">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-800/80">
-          <div className="flex items-center gap-1 bg-zinc-800/80 rounded-lg p-1">
+      <div className="relative bg-surface border border-line rounded-2xl w-full max-w-4xl max-h-[85vh] flex flex-col overflow-hidden shadow-2xl animate-modal">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-line">
+          <div className="flex items-center gap-1 bg-surface-secondary rounded-lg p-1">
             {TABS.map(({ key, label, icon: Icon }) => (
               <button
                 key={key}
@@ -61,8 +61,8 @@ export function ExportPanel({ tokens, fontFamily, onClose }: ExportPanelProps) {
                 }}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${
                   format === key
-                    ? 'bg-zinc-600 text-white shadow-sm'
-                    : 'text-zinc-400 hover:text-zinc-200'
+                    ? 'bg-surface-tertiary text-content shadow-sm'
+                    : 'text-content-muted hover:text-content'
                 }`}
               >
                 <Icon size={14} />
@@ -73,7 +73,7 @@ export function ExportPanel({ tokens, fontFamily, onClose }: ExportPanelProps) {
           <div className="flex items-center gap-2">
             <button
               onClick={copyAll}
-              className="flex items-center gap-2 px-4 py-2 bg-zinc-50 text-zinc-900 rounded-lg text-sm font-semibold hover:bg-white transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-surface-invert text-content-invert rounded-lg text-sm font-semibold hover:opacity-90 transition-colors"
             >
               {copied ? (
                 <>
@@ -87,7 +87,7 @@ export function ExportPanel({ tokens, fontFamily, onClose }: ExportPanelProps) {
             </button>
             <button
               onClick={onClose}
-              className="p-2 text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 rounded-lg transition-colors"
+              className="p-2 text-content-muted hover:text-content hover:bg-surface-secondary rounded-lg transition-colors"
             >
               <X size={18} />
             </button>
@@ -95,17 +95,17 @@ export function ExportPanel({ tokens, fontFamily, onClose }: ExportPanelProps) {
         </div>
 
         <div className="flex-1 overflow-auto p-5">
-          <pre className="text-[13px] font-mono text-zinc-300 leading-relaxed whitespace-pre selection:bg-zinc-700">
+          <pre className="text-[13px] font-mono text-content-secondary leading-relaxed whitespace-pre selection:bg-surface-tertiary">
             {content}
           </pre>
         </div>
 
-        <div className="px-5 py-3 border-t border-zinc-800/60 flex items-center justify-between">
-          <span className="text-[11px] text-zinc-600">
+        <div className="px-5 py-3 border-t border-line-subtle flex items-center justify-between">
+          <span className="text-[11px] text-content-faint">
             {content.split('\n').length} lines ·{' '}
             {(new Blob([content]).size / 1024).toFixed(1)} KB
           </span>
-          <span className="text-[11px] text-zinc-600">
+          <span className="text-[11px] text-content-faint">
             Press Escape to close
           </span>
         </div>

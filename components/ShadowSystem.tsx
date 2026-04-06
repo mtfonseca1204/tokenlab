@@ -18,7 +18,7 @@ export function ShadowSystem({ steps }: ShadowSystemProps) {
   };
 
   return (
-    <div className="bg-[#f8f8fa] rounded-2xl p-8">
+    <div className="bg-zinc-100 dark:bg-zinc-100 rounded-2xl p-8">
       <div className="flex items-end gap-5 justify-center flex-wrap">
         {steps.map((step) => (
           <button

@@ -36,19 +36,19 @@ export function RadiusSystem({ steps, primaryColor }: RadiusSystemProps) {
                 'border-radius 300ms ease, border-color 200ms ease, background-color 200ms ease, transform 150ms ease',
             }}
           />
-          <span className="text-xs font-mono text-zinc-400 font-medium">
+          <span className="text-xs font-mono text-content-secondary font-medium">
             {step.name}
           </span>
           <div className="flex items-center gap-1">
-            <span className="text-[10px] font-mono text-zinc-600">
+            <span className="text-[10px] font-mono text-content-faint">
               {step.value}
             </span>
             {copied === step.value ? (
-              <Check size={8} className="text-emerald-400" />
+              <Check size={8} className="text-emerald-500" />
             ) : (
               <Copy
                 size={8}
-                className="text-zinc-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="text-content-faint opacity-0 group-hover:opacity-100 transition-opacity"
               />
             )}
           </div>

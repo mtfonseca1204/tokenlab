@@ -2,9 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --surface: 255 255 255;
+  --surface-2: 249 250 251;
+  --surface-3: 243 244 246;
+  --surface-invert: 9 9 11;
+  --content: 24 24 27;
+  --content-2: 75 85 99;
+  --content-3: 107 114 128;
+  --content-4: 156 163 175;
+  --content-invert: 250 250 250;
+  --line: 229 231 235;
+  --line-subtle: 243 244 246;
+}
+
+.dark {
+  --surface: 9 9 11;
+  --surface-2: 24 24 27;
+  --surface-3: 39 39 42;
+  --surface-invert: 250 250 250;
+  --content: 244 244 245;
+  --content-2: 161 161 170;
+  --content-3: 113 113 122;
+  --content-4: 63 63 70;
+  --content-invert: 9 9 11;
+  --line: 39 39 42;
+  --line-subtle: 30 30 36;
+}
+
 @layer base {
   body {
-    @apply bg-zinc-950 text-zinc-50 antialiased;
+    @apply bg-surface text-content antialiased;
   }
 }
 
@@ -12,18 +40,15 @@
   width: 6px;
   height: 6px;
 }
-
 ::-webkit-scrollbar-track {
   background: transparent;
 }
-
 ::-webkit-scrollbar-thumb {
-  background: rgb(63 63 70);
+  background: rgb(var(--content-4));
   border-radius: 3px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(82 82 91);
+  background: rgb(var(--content-3));
 }
 
 input[type='color'] {
@@ -33,11 +58,9 @@ input[type='color'] {
   padding: 0;
   cursor: pointer;
 }
-
 input[type='color']::-webkit-color-swatch-wrapper {
   padding: 0;
 }
-
 input[type='color']::-webkit-color-swatch {
   border: none;
   border-radius: 6px;
@@ -47,51 +70,62 @@ input[type='range'] {
   -webkit-appearance: none;
   appearance: none;
   height: 4px;
-  background: rgb(63 63 70);
+  background: rgb(var(--line));
   border-radius: 2px;
   outline: none;
 }
-
 input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: rgb(161 161 170);
+  background: rgb(var(--content-2));
   cursor: pointer;
   transition: background 150ms;
 }
-
 input[type='range']::-webkit-slider-thumb:hover {
-  background: rgb(244 244 245);
+  background: rgb(var(--content));
 }
 
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
 .animate-section {
   animation: fadeInUp 0.5s ease-out both;
 }
 
 @keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
 }
-
 .animate-modal {
   animation: scaleIn 0.2s ease-out both;
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.animate-shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.checkerboard {
+  background-image:
+    linear-gradient(45deg, #e5e7eb 25%, transparent 25%),
+    linear-gradient(-45deg, #e5e7eb 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #e5e7eb 75%),
+    linear-gradient(-45deg, transparent 75%, #e5e7eb 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
 }

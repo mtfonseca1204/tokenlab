@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@imgly/background-removal": "^1.7.0",
     "lucide-react": "latest",
     "next": "latest",
     "react": "latest",

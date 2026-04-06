@@ -33,16 +33,16 @@ export function TypographyScale({ steps, fontFamily }: TypographyScaleProps) {
   const displaySteps = [...steps].reverse();
 
   return (
-    <div className="rounded-xl border border-zinc-800/60 overflow-hidden">
+    <div className="rounded-xl border border-line overflow-hidden">
       {displaySteps.map((step, i) => (
         <div
           key={step.name}
-          className={`group flex items-baseline gap-5 py-3.5 px-5 hover:bg-zinc-800/30 transition-colors ${
-            i < displaySteps.length - 1 ? 'border-b border-zinc-800/40' : ''
+          className={`group flex items-baseline gap-5 py-3.5 px-5 hover:bg-surface-tertiary/50 transition-colors ${
+            i < displaySteps.length - 1 ? 'border-b border-line-subtle' : ''
           }`}
         >
           <div className="w-12 flex-shrink-0">
-            <span className="text-[11px] font-mono text-zinc-500 font-medium">
+            <span className="text-[11px] font-mono text-content-muted font-medium">
               {step.name}
             </span>
           </div>
@@ -51,7 +51,7 @@ export function TypographyScale({ steps, fontFamily }: TypographyScaleProps) {
             style={{ fontFamily: `'${fontFamily}', system-ui, sans-serif` }}
           >
             <span
-              className="text-zinc-200"
+              className="text-content"
               style={{
                 fontSize: step.size,
                 fontWeight: step.weight,
@@ -63,18 +63,18 @@ export function TypographyScale({ steps, fontFamily }: TypographyScaleProps) {
             </span>
           </div>
           <div className="flex-shrink-0 flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            <span className="text-[11px] font-mono text-zinc-600">
+            <span className="text-[11px] font-mono text-content-faint">
               {step.sizePx}px
             </span>
-            <span className="text-[11px] font-mono text-zinc-700">
+            <span className="text-[11px] font-mono text-content-faint">
               {step.weight}
             </span>
             <button
               onClick={() => copy(step.size)}
-              className="text-zinc-600 hover:text-zinc-300 transition-colors"
+              className="text-content-faint hover:text-content transition-colors"
             >
               {copied === step.size ? (
-                <Check size={12} className="text-emerald-400" />
+                <Check size={12} className="text-emerald-500" />
               ) : (
                 <Copy size={12} />
               )}

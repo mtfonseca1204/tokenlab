@@ -13,7 +13,6 @@ export function Preview({ tokens, fontFamily }: PreviewProps) {
   const rMd = radius.find((r) => r.name === 'md')?.value || '8px';
   const rSm = radius.find((r) => r.name === 'sm')?.value || '4px';
   const shadow = shadows[2]?.value || 'none';
-
   const font = `'${fontFamily}', system-ui, sans-serif`;
 
   return (
@@ -22,7 +21,6 @@ export function Preview({ tokens, fontFamily }: PreviewProps) {
       style={{ backgroundColor: colors.neutral['100'], fontFamily: font }}
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Card Component */}
         <div
           style={{
             backgroundColor: '#ffffff',
@@ -64,7 +62,6 @@ export function Preview({ tokens, fontFamily }: PreviewProps) {
               </p>
             </div>
           </div>
-
           <p
             style={{
               color: colors.neutral['600'],
@@ -76,7 +73,6 @@ export function Preview({ tokens, fontFamily }: PreviewProps) {
             Generate a complete design token system from your brand in seconds.
             Perfect for designers and developers building consistent products.
           </p>
-
           <div className="flex gap-2.5">
             <button
               style={{
@@ -113,7 +109,6 @@ export function Preview({ tokens, fontFamily }: PreviewProps) {
           </div>
         </div>
 
-        {/* Form Component */}
         <div
           style={{
             backgroundColor: '#ffffff',
@@ -132,72 +127,49 @@ export function Preview({ tokens, fontFamily }: PreviewProps) {
           >
             Create Account
           </h4>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '16px' }}>
-            <div>
-              <label
-                style={{
-                  color: colors.neutral['600'],
-                  fontSize: '0.8125rem',
-                  fontWeight: 500,
-                  display: 'block',
-                  marginBottom: '5px',
-                }}
-              >
-                Full Name
-              </label>
-              <input
-                type="text"
-                placeholder="Jane Cooper"
-                readOnly
-                style={{
-                  width: '100%',
-                  padding: '9px 13px',
-                  borderRadius: rMd,
-                  border: `1.5px solid ${colors.neutral['200']}`,
-                  fontSize: '0.8125rem',
-                  color: colors.neutral['900'],
-                  backgroundColor: colors.neutral['50'],
-                  outline: 'none',
-                  fontFamily: font,
-                  transition: 'border-color 200ms ease',
-                  boxSizing: 'border-box',
-                }}
-              />
-            </div>
-            <div>
-              <label
-                style={{
-                  color: colors.neutral['600'],
-                  fontSize: '0.8125rem',
-                  fontWeight: 500,
-                  display: 'block',
-                  marginBottom: '5px',
-                }}
-              >
-                Email
-              </label>
-              <input
-                type="text"
-                placeholder="jane@example.com"
-                readOnly
-                style={{
-                  width: '100%',
-                  padding: '9px 13px',
-                  borderRadius: rMd,
-                  border: `1.5px solid ${colors.neutral['200']}`,
-                  fontSize: '0.8125rem',
-                  color: colors.neutral['900'],
-                  backgroundColor: colors.neutral['50'],
-                  outline: 'none',
-                  fontFamily: font,
-                  transition: 'border-color 200ms ease',
-                  boxSizing: 'border-box',
-                }}
-              />
-            </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+              marginBottom: '16px',
+            }}
+          >
+            {['Full Name', 'Email'].map((label) => (
+              <div key={label}>
+                <label
+                  style={{
+                    color: colors.neutral['600'],
+                    fontSize: '0.8125rem',
+                    fontWeight: 500,
+                    display: 'block',
+                    marginBottom: '5px',
+                  }}
+                >
+                  {label}
+                </label>
+                <input
+                  type="text"
+                  placeholder={
+                    label === 'Full Name' ? 'Jane Cooper' : 'jane@example.com'
+                  }
+                  readOnly
+                  style={{
+                    width: '100%',
+                    padding: '9px 13px',
+                    borderRadius: rMd,
+                    border: `1.5px solid ${colors.neutral['200']}`,
+                    fontSize: '0.8125rem',
+                    color: colors.neutral['900'],
+                    backgroundColor: colors.neutral['50'],
+                    outline: 'none',
+                    fontFamily: font,
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+            ))}
           </div>
-
           <button
             style={{
               width: '100%',
@@ -211,52 +183,30 @@ export function Preview({ tokens, fontFamily }: PreviewProps) {
               border: 'none',
               cursor: 'pointer',
               marginBottom: '14px',
-              transition: 'background-color 200ms ease',
             }}
           >
             Create Account
           </button>
-
           <div className="flex gap-2 justify-center">
-            <span
-              style={{
-                backgroundColor: colors.success['100'],
-                color: colors.success['700'],
-                borderRadius: rSm,
-                padding: '3px 10px',
-                fontSize: '0.6875rem',
-                fontWeight: 600,
-                transition: 'all 200ms ease',
-              }}
-            >
-              Active
-            </span>
-            <span
-              style={{
-                backgroundColor: colors.warning['100'],
-                color: colors.warning['700'],
-                borderRadius: rSm,
-                padding: '3px 10px',
-                fontSize: '0.6875rem',
-                fontWeight: 600,
-                transition: 'all 200ms ease',
-              }}
-            >
-              Pending
-            </span>
-            <span
-              style={{
-                backgroundColor: colors.error['100'],
-                color: colors.error['700'],
-                borderRadius: rSm,
-                padding: '3px 10px',
-                fontSize: '0.6875rem',
-                fontWeight: 600,
-                transition: 'all 200ms ease',
-              }}
-            >
-              Inactive
-            </span>
+            {[
+              { label: 'Active', color: 'success' as const },
+              { label: 'Pending', color: 'warning' as const },
+              { label: 'Inactive', color: 'error' as const },
+            ].map(({ label, color }) => (
+              <span
+                key={label}
+                style={{
+                  backgroundColor: colors[color]['100'],
+                  color: colors[color]['700'],
+                  borderRadius: rSm,
+                  padding: '3px 10px',
+                  fontSize: '0.6875rem',
+                  fontWeight: 600,
+                }}
+              >
+                {label}
+              </span>
+            ))}
           </div>
         </div>
       </div>
