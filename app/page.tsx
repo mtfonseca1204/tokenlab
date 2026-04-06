@@ -2,14 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import {
-  Sparkles,
-  ArrowRight,
-  Palette,
-  ImageIcon,
-  Loader2,
-} from 'lucide-react';
+import { Sparkles, ArrowRight, Loader2 } from 'lucide-react';
 import { generateFromDescription } from '@/lib/ai-generator';
 import { generateColorScale } from '@/lib/colors';
 import { TokenConfig } from '@/lib/types';
@@ -156,7 +149,7 @@ export default function HomePage() {
 
           {/* Suggestion Chips */}
           {!result && (
-            <div className="flex flex-wrap justify-center gap-2 mb-12">
+            <div className="flex flex-wrap justify-center gap-2">
               {SUGGESTIONS.map((s) => (
                 <button
                   key={s}
@@ -235,47 +228,6 @@ export default function HomePage() {
               </div>
             </div>
           )}
-        </div>
-      </div>
-
-      {/* Feature Cards */}
-      <div className="border-t border-line px-6 py-16 bg-surface-secondary/50">
-        <div className="max-w-2xl mx-auto">
-          <p className="text-center text-xs text-content-faint uppercase tracking-widest font-semibold mb-8">
-            Or explore our tools
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Link
-              href="/tokens"
-              className="group bg-surface border border-line rounded-2xl p-6 hover:border-content-faint transition-all duration-200"
-            >
-              <Palette
-                size={24}
-                className="text-content-muted mb-3 group-hover:text-content transition-colors"
-              />
-              <h3 className="font-semibold text-content mb-1">
-                Token Generator
-              </h3>
-              <p className="text-sm text-content-muted leading-relaxed">
-                Fine-tune colors, typography, spacing, shadows, and radius.
-                Export to CSS, Tailwind, or JSON.
-              </p>
-            </Link>
-            <Link
-              href="/images"
-              className="group bg-surface border border-line rounded-2xl p-6 hover:border-content-faint transition-all duration-200"
-            >
-              <ImageIcon
-                size={24}
-                className="text-content-muted mb-3 group-hover:text-content transition-colors"
-              />
-              <h3 className="font-semibold text-content mb-1">Image Tools</h3>
-              <p className="text-sm text-content-muted leading-relaxed">
-                Remove backgrounds instantly and upscale images with smart
-                enhancement — all in the browser.
-              </p>
-            </Link>
-          </div>
         </div>
       </div>
     </div>
