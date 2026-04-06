@@ -3,11 +3,12 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from '@/lib/theme';
-import { Sun, Moon, Sparkles, Palette, ImageIcon } from 'lucide-react';
+import { Sun, Moon, Sparkles, Palette, Layers, ImageIcon } from 'lucide-react';
 
 const NAV_ITEMS = [
   { href: '/', label: 'Generate', icon: Sparkles },
   { href: '/tokens', label: 'Tokens', icon: Palette },
+  { href: '/components', label: 'Components', icon: Layers },
   { href: '/images', label: 'Images', icon: ImageIcon },
 ];
 
