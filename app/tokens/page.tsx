@@ -195,6 +195,7 @@ export default function TokensPage() {
         <ExportPanel
           tokens={tokens}
           fontFamily={config.fontFamily}
+          config={config}
           onClose={() => setShowExport(false)}
         />
       )}
