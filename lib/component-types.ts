@@ -37,6 +37,10 @@ export interface CardConfig {
   description: string;
   hasImage: boolean;
   imageUrl: string;
+  /** Horizontal focal point for object-position (0 = left, 100 = right). */
+  imageFocalX: number;
+  /** Vertical focal point for object-position (0 = top, 100 = bottom). */
+  imageFocalY: number;
   hasActions: boolean;
   actionLabel: string;
   shadow: ShadowLevel;
@@ -102,6 +106,8 @@ export const DEFAULT_CARD: CardConfig = {
     'A brief description that provides context about this card content.',
   hasImage: true,
   imageUrl: '',
+  imageFocalX: 50,
+  imageFocalY: 50,
   hasActions: true,
   actionLabel: 'Learn More',
   shadow: 'md',

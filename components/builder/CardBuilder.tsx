@@ -1,5 +1,7 @@
 'use client';
 
+import { useRef } from 'react';
+import { Upload, X } from 'lucide-react';
 import type {
   CardConfig,
   ComponentSize,
@@ -90,6 +92,18 @@ function ToggleGroup<T extends string>({
 
 /* ─── OPTIONS ─── */
 
+const FOCAL_PRESETS: { label: string; x: number; y: number }[] = [
+  { label: '↖', x: 0, y: 0 },
+  { label: '↑', x: 50, y: 0 },
+  { label: '↗', x: 100, y: 0 },
+  { label: '←', x: 0, y: 50 },
+  { label: '◎', x: 50, y: 50 },
+  { label: '→', x: 100, y: 50 },
+  { label: '↙', x: 0, y: 100 },
+  { label: '↓', x: 50, y: 100 },
+  { label: '↘', x: 100, y: 100 },
+];
+
 export function CardOptions({
   config,
   onChange,
@@ -97,8 +111,24 @@ export function CardOptions({
   config: CardConfig;
   onChange: (c: CardConfig) => void;
 }) {
+  const fileRef = useRef<HTMLInputElement>(null);
   const set = <K extends keyof CardConfig>(key: K, value: CardConfig[K]) =>
     onChange({ ...config, [key]: value });
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file?.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const data = String(reader.result ?? '');
+      if (data) onChange({ ...config, imageUrl: data });
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  };
+
+  const focalX = config.imageFocalX ?? 50;
+  const focalY = config.imageFocalY ?? 50;
 
   return (
     <div className="space-y-4">
@@ -128,14 +158,159 @@ export function CardOptions({
       />
 
       {config.hasImage && (
-        <div>
-          <Label>Image URL</Label>
+        <div className="space-y-3">
           <input
-            value={config.imageUrl}
-            onChange={(e) => set('imageUrl', e.target.value)}
-            placeholder="https://..."
-            className="w-full px-3 py-2 bg-surface-secondary border border-line rounded-lg text-sm text-content focus:outline-none focus:ring-1 focus:ring-content-faint placeholder:text-content-faint"
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleFile}
           />
+          <div>
+            <Label>Image</Label>
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-surface-secondary border border-line border-dashed rounded-lg text-sm font-medium text-content hover:bg-surface-tertiary/80 transition-colors"
+            >
+              <Upload size={16} className="text-content-muted" />
+              Upload from computer
+            </button>
+          </div>
+          <div>
+            <Label>Or paste URL</Label>
+            <div className="flex gap-1.5">
+              <input
+                value={
+                  config.imageUrl.startsWith('data:')
+                    ? ''
+                    : config.imageUrl
+                }
+                onChange={(e) => set('imageUrl', e.target.value)}
+                placeholder="https://..."
+                className="flex-1 min-w-0 px-3 py-2 bg-surface-secondary border border-line rounded-lg text-sm text-content focus:outline-none focus:ring-1 focus:ring-content-faint placeholder:text-content-faint"
+              />
+              {config.imageUrl ? (
+                <button
+                  type="button"
+                  title="Remove image"
+                  onClick={() => onChange({ ...config, imageUrl: '' })}
+                  className="flex-shrink-0 p-2 rounded-lg border border-line text-content-muted hover:text-content hover:bg-surface-secondary transition-colors"
+                >
+                  <X size={16} />
+                </button>
+              ) : null}
+            </div>
+            {config.imageUrl.startsWith('data:') ? (
+              <p className="text-[10px] text-content-faint mt-1">
+                Using uploaded file — clear with × to switch to URL or gradient.
+              </p>
+            ) : null}
+          </div>
+
+          {config.imageUrl ? (
+            <div>
+              <Label>Focal point</Label>
+              <p className="text-[10px] text-content-faint mb-2 leading-snug">
+                Click the preview or use sliders — controls what stays in frame
+                with cover crop.
+              </p>
+              <button
+                type="button"
+                onClick={(e) => {
+                  const el = e.currentTarget;
+                  const rect = el.getBoundingClientRect();
+                  const x = Math.round(
+                    ((e.clientX - rect.left) / rect.width) * 100
+                  );
+                  const y = Math.round(
+                    ((e.clientY - rect.top) / rect.height) * 100
+                  );
+                  onChange({ ...config, imageFocalX: x, imageFocalY: y });
+                }}
+                className="relative w-full h-24 rounded-lg overflow-hidden border border-line cursor-crosshair group mb-3"
+              >
+                <img
+                  src={config.imageUrl}
+                  alt=""
+                  className="w-full h-full pointer-events-none"
+                  style={{
+                    objectFit: 'cover',
+                    objectPosition: `${focalX}% ${focalY}%`,
+                  }}
+                />
+                <span
+                  className="absolute w-3 h-3 rounded-full border-2 border-white shadow-md bg-content/20 pointer-events-none"
+                  style={{
+                    left: `${focalX}%`,
+                    top: `${focalY}%`,
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                />
+              </button>
+              <div className="grid grid-cols-3 gap-1 mb-3">
+                {FOCAL_PRESETS.map((p) => (
+                  <button
+                    key={p.label}
+                    type="button"
+                    title={`${p.x}% ${p.y}%`}
+                    onClick={() =>
+                      onChange({
+                        ...config,
+                        imageFocalX: p.x,
+                        imageFocalY: p.y,
+                      })
+                    }
+                    className={`py-1.5 text-xs rounded-md border transition-colors ${
+                      focalX === p.x && focalY === p.y
+                        ? 'border-content bg-surface-secondary text-content'
+                        : 'border-line text-content-muted hover:text-content hover:bg-surface-secondary/50'
+                    }`}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-content-faint w-14 shrink-0">
+                    Horizontal
+                  </span>
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    value={focalX}
+                    onChange={(e) =>
+                      set('imageFocalX', Number(e.target.value))
+                    }
+                    className="flex-1 accent-content h-1.5"
+                  />
+                  <span className="text-[10px] font-mono text-content-faint w-8">
+                    {focalX}%
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-content-faint w-14 shrink-0">
+                    Vertical
+                  </span>
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    value={focalY}
+                    onChange={(e) =>
+                      set('imageFocalY', Number(e.target.value))
+                    }
+                    className="flex-1 accent-content h-1.5"
+                  />
+                  <span className="text-[10px] font-mono text-content-faint w-8">
+                    {focalY}%
+                  </span>
+                </div>
+              </div>
+            </div>
+          ) : null}
         </div>
       )}
 
@@ -273,7 +448,12 @@ export function CardPreview({
         <img
           src={config.imageUrl}
           alt=""
-          style={{ width: '100%', height: 180, objectFit: 'cover' }}
+          style={{
+            width: '100%',
+            height: 180,
+            objectFit: 'cover',
+            objectPosition: `${config.imageFocalX ?? 50}% ${config.imageFocalY ?? 50}%`,
+          }}
           onError={(e) => {
             (e.target as HTMLImageElement).style.display = 'none';
           }}

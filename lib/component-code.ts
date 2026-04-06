@@ -142,12 +142,15 @@ export function generateCardCode(c: CardConfig, d: DesignConfig): { react: strin
   const border = c.hasBorder ? 'border border-zinc-200' : '';
   const containerCls = ['bg-white overflow-hidden', rad, shadow, border, 'max-w-sm'].filter(Boolean).join(' ');
   const txtCol = contrast(d.primaryColor) === '#ffffff' ? 'white' : 'black';
+  const focalX = c.imageFocalX ?? 50;
+  const focalY = c.imageFocalY ?? 50;
+  const imgPosStyle = ` style={{ objectPosition: '${focalX}% ${focalY}%' }}`;
 
   let imgBlock = '';
   if (c.gradientBg.enabled) {
     imgBlock = `\n      <div className="h-48 ${TW_DIR[c.gradientBg.direction]} from-[${c.gradientBg.from}] to-[${c.gradientBg.to}]" />`;
   } else if (c.hasImage && c.imageUrl) {
-    imgBlock = `\n      <img src="${c.imageUrl}" alt="" className="w-full h-48 object-cover" />`;
+    imgBlock = `\n      <img src="${c.imageUrl}" alt="" className="w-full h-48 object-cover"${imgPosStyle} />`;
   } else if (c.hasImage) {
     imgBlock = `\n      <div className="h-48 bg-gradient-to-br from-[${d.primaryColor}]/10 to-[${d.primaryColor}]/30" />`;
   }
@@ -177,7 +180,7 @@ export function generateCardCode(c: CardConfig, d: DesignConfig): { react: strin
     imgCSS = `\n  .card-image { height: 192px; background: ${gradientCSS(c.gradientBg)}; }`;
     imgHTML = '\n  <div class="card-image"></div>';
   } else if (c.hasImage && c.imageUrl) {
-    imgCSS = `\n  .card-image { width: 100%; height: 192px; object-fit: cover; }`;
+    imgCSS = `\n  .card-image { width: 100%; height: 192px; object-fit: cover; object-position: ${focalX}% ${focalY}%; }`;
     imgHTML = `\n  <img class="card-image" src="${c.imageUrl}" alt="" />`;
   } else if (c.hasImage) {
     imgCSS = `\n  .card-image { height: 192px; background: linear-gradient(135deg, ${d.primaryColor}1a, ${d.primaryColor}4d); }`;
