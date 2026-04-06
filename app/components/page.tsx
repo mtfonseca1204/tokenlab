@@ -62,6 +62,7 @@ export default function ComponentsPage() {
         const p = JSON.parse(ai);
         setDesign({
           primaryColor: p.primaryColor || DEFAULT_DESIGN.primaryColor,
+          secondaryColor: p.secondaryColor || DEFAULT_DESIGN.secondaryColor,
           fontFamily: p.fontFamily || DEFAULT_DESIGN.fontFamily,
         });
       }
